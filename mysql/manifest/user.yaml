@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment 
+  namespace: mysql
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+      matchLabels:
+         app: user-app
+  template:
+      metadata:
+          name: userpod
+          labels:
+            app: user-app
+      spec:
+        containers:
+           - name: usercontainer
+             image: stacksimplify/kube-usermanagement-microservice:1.0.0
+             ports:
+               - containerPort: 8095
+             env:
+               - name: DB_HOST
+                 value: mysql-service.mysql.svc.cluster.local
+               - name: DB_PORT
+                 value: "3306"
+               - name: DB_USER
+                 value: root
+               - name: DB_PASSWORD
+                 value: dbpassword123
+               - name: DB_NAME
+                 value: usermgmt
+      
