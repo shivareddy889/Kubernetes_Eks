@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+   name: frontend-app
+   namespace: deployment
+spec: 
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+       app: frontend-app
+  template:
+     metadata: 
+         name: frontendpod
+         labels:
+           app: frontend-app
+     spec:
+       containers:
+          - name: frontendcontainer 
+            image: stacksimplify/kube-frontend-nginx:1.0.0
+            ports:
+             - containerPort: 8080
+      
